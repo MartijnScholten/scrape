@@ -16,8 +16,10 @@
     "url": "https://github.com/MartijnScholten/scrape/issues"
   },
   "homepage": "https://github.com/MartijnScholten/scrape#readme",
-  "description": "",
   "dependencies": {
-    "axios": "^1.8.4"
-  }
+    "@netlify/functions": "^3.0.4",
+    "axios": "^1.8.4",
+    "crypto": "^1.0.1"
+  },
+  "description": ""
 }
