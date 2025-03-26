@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="nl">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Website Wijziging Monitor</title>
+    <title>Bidding History Monitor</title>
     <style>
         /* Cross-browser compatibele stijlen */
         :root {
@@ -15,13 +16,14 @@
             --light-color: #f8f9fa;
             --dark-color: #343a40;
         }
-        
+
         * {
             margin: 0;
             padding: 0;
+            -webkit-box-sizing: border-box;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             line-height: 1.6;
@@ -29,22 +31,23 @@
             background-color: #f5f5f5;
             padding: 20px;
         }
-        
+
         .container {
             max-width: 900px;
             margin: 0 auto;
             background-color: #fff;
             border-radius: 8px;
+            -webkit-box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             padding: 20px;
         }
-        
+
         h1 {
             color: var(--primary-color);
             margin-bottom: 20px;
             text-align: center;
         }
-        
+
         .card {
             border: 1px solid #ddd;
             border-radius: 8px;
@@ -52,19 +55,19 @@
             margin-bottom: 20px;
             background-color: #fff;
         }
-        
+
         .form-group {
             margin-bottom: 15px;
         }
-        
+
         label {
             display: block;
             margin-bottom: 5px;
             font-weight: bold;
         }
-        
-        input[type="text"], 
-        input[type="url"], 
+
+        input[type="text"],
+        input[type="url"],
         input[type="number"] {
             width: 100%;
             padding: 10px;
@@ -72,7 +75,7 @@
             border-radius: 4px;
             font-size: 16px;
         }
-        
+
         button {
             display: inline-block;
             background-color: var(--primary-color);
@@ -82,37 +85,38 @@
             border-radius: 4px;
             cursor: pointer;
             font-size: 16px;
+            -webkit-transition: background-color 0.3s;
             transition: background-color 0.3s;
         }
-        
+
         button:hover {
             background-color: var(--secondary-color);
         }
-        
+
         .status {
             margin-top: 20px;
             padding: 15px;
             border-radius: 4px;
         }
-        
+
         .status-success {
             background-color: rgba(40, 167, 69, 0.1);
             border: 1px solid var(--success-color);
             color: var(--success-color);
         }
-        
+
         .status-warning {
             background-color: rgba(255, 193, 7, 0.1);
             border: 1px solid var(--warning-color);
             color: var(--dark-color);
         }
-        
+
         .status-error {
             background-color: rgba(220, 53, 69, 0.1);
             border: 1px solid var(--danger-color);
             color: var(--danger-color);
         }
-        
+
         .log-container {
             margin-top: 20px;
             max-height: 300px;
@@ -122,48 +126,58 @@
             padding: 10px;
             background-color: #f9f9f9;
         }
-        
+
         .log-item {
             padding: 8px;
             border-bottom: 1px solid #eee;
         }
-        
+
         .log-item:last-child {
             border-bottom: none;
         }
-        
+
         .log-time {
             color: #666;
             font-size: 0.9em;
         }
-        
+
         .log-message {
             margin-left: 10px;
         }
-        
+
         .log-success {
             color: var(--success-color);
         }
-        
+
         .log-warning {
             color: var(--warning-color);
         }
-        
+
         .log-error {
             color: var(--danger-color);
         }
-        
+
         /* Cross-browser compatibiliteitsstijlen */
         @-webkit-keyframes spin {
-            0% { -webkit-transform: rotate(0deg); }
-            100% { -webkit-transform: rotate(360deg); }
+            0% {
+                -webkit-transform: rotate(0deg);
+            }
+
+            100% {
+                -webkit-transform: rotate(360deg);
+            }
         }
-        
+
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
-        
+
         .spinner {
             display: inline-block;
             width: 20px;
@@ -176,13 +190,13 @@
             margin-right: 10px;
             vertical-align: middle;
         }
-        
+
         /* Responsive stijlen */
         @media (max-width: 768px) {
             .container {
                 padding: 15px;
             }
-            
+
             button {
                 width: 100%;
                 margin-bottom: 10px;
@@ -190,10 +204,11 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
-        <h1>Website Wijziging Monitor</h1>
-        
+        <h1>Bidding History Monitor</h1>
+
         <div class="card">
             <h2>Instellingen</h2>
             <div class="form-group">
@@ -201,17 +216,21 @@
                 <input type="url" id="websiteUrl" placeholder="https://www.example.com" required>
             </div>
             <div class="form-group">
+                <label for="webhookUrl">Webhook URL (optioneel):</label>
+                <input type="url" id="webhookUrl" placeholder="https://hooks.make.com/...">
+            </div>
+            <div class="form-group">
                 <label for="checkInterval">Controle interval (minuten):</label>
-                <input type="number" id="checkInterval" min="5" value="60" required>
+                <input type="number" id="checkInterval" min="1" value="5" required>
             </div>
             <button id="saveSettings">Instellingen opslaan</button>
             <button id="manualCheck">Handmatige controle</button>
         </div>
-        
+
         <div id="statusContainer" class="status status-warning">
-            Nog geen controle uitgevoerd.
+            Nog geen controle uitgevoerd. We controleren specifiek op wijzigingen in het .bidding-history element.
         </div>
-        
+
         <div class="card">
             <h2>Laatste controles</h2>
             <div id="logContainer" class="log-container">
@@ -224,121 +243,155 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             // Element referenties
             const websiteUrlInput = document.getElementById('websiteUrl');
+            const webhookUrlInput = document.getElementById('webhookUrl');
             const checkIntervalInput = document.getElementById('checkInterval');
             const saveSettingsBtn = document.getElementById('saveSettings');
             const manualCheckBtn = document.getElementById('manualCheck');
             const statusContainer = document.getElementById('statusContainer');
             const logContainer = document.getElementById('logContainer');
-            
+
             // Instellingen laden uit localStorage
             loadSettings();
-            
+
             // Event listeners
             saveSettingsBtn.addEventListener('click', saveSettings);
             manualCheckBtn.addEventListener('click', performManualCheck);
-            
+
             // Instellingen opslaan
             function saveSettings() {
                 const websiteUrl = websiteUrlInput.value.trim();
+                const webhookUrl = webhookUrlInput.value.trim();
                 const checkInterval = parseInt(checkIntervalInput.value);
-                
+
                 if (!websiteUrl || !isValidUrl(websiteUrl)) {
                     setStatus('Voer een geldige website URL in.', 'error');
                     return;
                 }
-                
-                if (isNaN(checkInterval) || checkInterval < 5) {
-                    setStatus('Interval moet minimaal 5 minuten zijn.', 'error');
+
+                if (webhookUrl && !isValidUrl(webhookUrl)) {
+                    setStatus('Voer een geldige webhook URL in.', 'error');
                     return;
                 }
-                
+
+                if (isNaN(checkInterval) || checkInterval < 1) {
+                    setStatus('Interval moet minimaal 1 minuut zijn.', 'error');
+                    return;
+                }
+
                 localStorage.setItem('websiteUrl', websiteUrl);
+                localStorage.setItem('webhookUrl', webhookUrl);
                 localStorage.setItem('checkInterval', checkInterval);
-                
+
                 setStatus('Instellingen opgeslagen!', 'success');
                 addLogEntry('Instellingen bijgewerkt');
             }
-            
+
             // Instellingen laden
             function loadSettings() {
                 const savedUrl = localStorage.getItem('websiteUrl');
+                const savedWebhook = localStorage.getItem('webhookUrl');
                 const savedInterval = localStorage.getItem('checkInterval');
-                
+
                 if (savedUrl) {
                     websiteUrlInput.value = savedUrl;
                 }
-                
+
+                if (savedWebhook) {
+                    webhookUrlInput.value = savedWebhook;
+                }
+
                 if (savedInterval) {
                     checkIntervalInput.value = savedInterval;
                 }
             }
-            
+
             // Handmatige controle uitvoeren
-            function performManualCheck() {
+            async function performManualCheck() {
                 const websiteUrl = websiteUrlInput.value.trim();
-                
+
                 if (!websiteUrl || !isValidUrl(websiteUrl)) {
                     setStatus('Voer een geldige website URL in.', 'error');
                     return;
                 }
-                
-                setStatus('Controle uitvoeren...', 'warning');
+
+                setStatus('Controle van .bidding-history element uitvoeren...', 'warning');
                 addLogEntry('Handmatige controle gestart');
-                
-                // Hier zou je de Netlify functie aanroepen die de website controleert
-                // In dit voorbeeld simuleren we de aanroep
-                setTimeout(() => {
-                    // Simuleren van een random uitkomst
-                    const outcomes = [
-                        { message: 'Geen wijzigingen gedetecteerd', type: 'success' },
-                        { message: 'Wijziging gedetecteerd! Melding verstuurd.', type: 'warning' },
-                        { message: 'Fout bij het controleren van de website', type: 'error' }
-                    ];
-                    
-                    const randomOutcome = outcomes[Math.floor(Math.random() * outcomes.length)];
-                    setStatus(randomOutcome.message, randomOutcome.type);
-                    addLogEntry(randomOutcome.message, randomOutcome.type);
-                }, 2000);
+
+                // Spinner toevoegen aan de status
+                const spinner = document.createElement('span');
+                spinner.className = 'spinner';
+                statusContainer.prepend(spinner);
+
+                try {
+                    // Roep de functie aan met de website URL
+                    const result = await callScraperFunction(websiteUrl);
+
+                    // Verwijder de spinner
+                    if (statusContainer.firstChild && statusContainer.firstChild.className === 'spinner') {
+                        statusContainer.removeChild(statusContainer.firstChild);
+                    }
+
+                    if (result.success) {
+                        if (result.changed) {
+                            setStatus('Wijziging gedetecteerd in .bidding-history!', 'warning');
+                            addLogEntry(`Wijziging gedetecteerd in .bidding-history! Nieuwe hash: ${result.newHash.substring(0, 8)}...`, 'warning');
+                        } else {
+                            setStatus('Geen wijzigingen gedetecteerd in .bidding-history', 'success');
+                            addLogEntry(`Geen wijzigingen in .bidding-history. Hash: ${result.hash.substring(0, 8)}...`, 'success');
+                        }
+                    } else {
+                        setStatus(result.message || 'Onbekende fout', 'error');
+                        addLogEntry(result.message || 'Onbekende fout', 'error');
+                    }
+                } catch (error) {
+                    // Verwijder de spinner bij een fout
+                    if (statusContainer.firstChild && statusContainer.firstChild.className === 'spinner') {
+                        statusContainer.removeChild(statusContainer.firstChild);
+                    }
+
+                    setStatus(`Fout: ${error.message}`, 'error');
+                    addLogEntry(`Fout: ${error.message}`, 'error');
+                }
             }
-            
+
             // Status bijwerken
             function setStatus(message, type) {
                 statusContainer.className = `status status-${type}`;
                 statusContainer.textContent = message;
             }
-            
+
             // Log entry toevoegen
             function addLogEntry(message, type = 'info') {
                 const now = new Date();
                 const timeStr = now.toLocaleTimeString();
                 const dateStr = now.toLocaleDateString();
-                
+
                 const logItem = document.createElement('div');
                 logItem.className = 'log-item';
-                
+
                 const timeSpan = document.createElement('span');
                 timeSpan.className = 'log-time';
                 timeSpan.textContent = `${dateStr} ${timeStr}:`;
-                
+
                 const messageSpan = document.createElement('span');
                 messageSpan.className = `log-message log-${type}`;
                 messageSpan.textContent = message;
-                
+
                 logItem.appendChild(timeSpan);
                 logItem.appendChild(messageSpan);
-                
+
                 // Bovenaan toevoegen (nieuwste eerst)
                 logContainer.insertBefore(logItem, logContainer.firstChild);
-                
+
                 // Beperk tot 50 log entries
                 if (logContainer.children.length > 50) {
                     logContainer.removeChild(logContainer.lastChild);
                 }
             }
-            
+
             // URL validatie helper
             function isValidUrl(url) {
                 try {
@@ -348,50 +401,51 @@
                     return false;
                 }
             }
-            
+
             // Functie om de Netlify functie aan te roepen
             async function callScraperFunction(url) {
                 try {
-                    // In een echte implementatie zou je hier een fetch naar je Netlify functie doen
-                    // const response = await fetch('/.netlify/functions/scrape-website', {
-                    //     method: 'POST',
-                    //     headers: { 'Content-Type': 'application/json' },
-                    //     body: JSON.stringify({ url })
-                    // });
-                    // const data = await response.json();
-                    // return data;
-                    
-                    // Voor deze demo simuleren we het resultaat
-                    return new Promise(resolve => {
-                        setTimeout(() => {
-                            resolve({ success: true, message: 'Website gecontroleerd' });
-                        }, 1000);
+                    // Roep de manual-check-bidding functie aan
+                    const response = await fetch('/.netlify/functions/manual-check-bidding', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            url,
+                            webhook: webhookUrlInput.value.trim() || null
+                        })
                     });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    const data = await response.json();
+                    return data;
                 } catch (error) {
                     console.error('Error calling function:', error);
-                    return { success: false, message: 'Fout bij aanroepen functie' };
+                    return { success: false, message: `Fout bij aanroepen functie: ${error.message}` };
                 }
             }
-            
+
             // Automatische controle instellen op basis van interval
             function setupAutoCheck() {
-                const interval = parseInt(localStorage.getItem('checkInterval')) || 60;
+                const interval = parseInt(localStorage.getItem('checkInterval')) || 5;
                 const minutes = interval * 60 * 1000;
-                
+
                 // Clear any existing interval
                 if (window.autoCheckInterval) {
                     clearInterval(window.autoCheckInterval);
                 }
-                
+
                 // Set new interval
                 window.autoCheckInterval = setInterval(performManualCheck, minutes);
-                
+
                 addLogEntry(`Automatische controle ingesteld voor elke ${interval} minuten`);
             }
-            
+
             // Setup auto check op startup
             setupAutoCheck();
-            
+
             // Reset auto check wanneer instellingen veranderen
             saveSettingsBtn.addEventListener('click', setupAutoCheck);
         });
