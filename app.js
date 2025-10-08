@@ -32,3 +32,16 @@
         });
     }
 })();
+(function() {
+    'use strict';
+    
+    // Verwijder CSS bestand op basis van href
+    // var cssToRemove = '/custom.css';
+    
+    var links = document.querySelectorAll('link[rel="stylesheet"]');
+    for (var i = 0; i < links.length; i++) {
+        if (links[i].href && links[i].href.indexOf(cssToRemove) !== -1) {
+            links[i].parentNode.removeChild(links[i]);
+        }
+    }
+})();
