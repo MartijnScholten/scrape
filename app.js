@@ -1,4 +1,4 @@
-(function() {
+// (function() {
    // const netlify = '.varify-html-Y9Mo6vDVaz, .trustpilot-placeholder, body.zoom-image--enabled .vault-active, .usp-wrapper, .bundle-description';
     
     function removeElements() {
