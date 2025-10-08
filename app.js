@@ -1,5 +1,5 @@
 (function() {
-    const netlify = '.varify-html-Y9Mo6vDVaz, .trustpilot-placeholder, body.zoom-image--enabled .vault-active, .usp-wrapper, .bundle-description';
+   // const netlify = '.varify-html-Y9Mo6vDVaz, .trustpilot-placeholder, body.zoom-image--enabled .vault-active, .usp-wrapper, .bundle-description';
     
     function removeElements() {
         document.querySelectorAll(netlify).forEach(el => el.remove());
